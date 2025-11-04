@@ -1,0 +1,110 @@
+import time
+
+#Monster dictionary
+monster_dictionary = {
+    'flying skull': "Flying skulls are a type of creature within Gravity Falls, Oregon that resemble one-eyed skulls with bat wings.",
+    'cowl': "Cowls are an interbred species of cows and owls that lays milk-filled eggs. Calls MHOO.",
+    'geodite': 'They resemble living geodes that glow and can create sparks when that are banged together.\nThey communicate with each other by high-pitched chirps and humming noises.',
+    'gnome': 'Gnomes are small men who live in the forest of Gravity Falls.\nThey seem to have an extreme level of coordination with each other, and are able to form one enormous gnome monster simply by latching onto each other.',
+    'kill billy': 'The feral and fanged, glowing-eyed hill men are known as Kill Billies, \nand are known to suck blood and steal the overalls of any who may wander into their territory of the forest.'
+}
+
+#User creds
+users = {
+    'DPines': 'journal3owner!',
+    'Ford': 'C1PH3R'
+}
+
+#Stores current session (rudimentary)
+current_user = ''
+
+#main menu
+#IH1: explain new + existing features
+print("Welcome to the legendary and elusive Gravity Falls Monster Dictionary!")
+print("This is a compilation of the most common monsters and cryptids in our town.")
+print("You'll be able to browse different monster entries, as well as add/delete them.")
+
+
+while True:
+    #IH6: Provide an Explicit Path through the Task
+    login_option = input("\nEnter 1 to Log in, Enter 2 to Create an Account. Enter 3 to exit.\n")
+
+    if (login_option == '1'):
+        while True:
+            username = input("Enter your username: ")
+            password = input("Enter your password: ")
+            if username in users:
+                if users.get(username) == password:
+                    print("Logged in successfully.")
+                    current_user = username
+                    break
+                else:
+                    print("Wrong password!")
+
+    if (login_option == '2'):
+        username = input("Enter your account's username: ")
+        password = input("Enter your account's password: ")
+        users.update({username: password})
+        print(f"You are now logged in as {username}.")
+        current_user = username
+
+    if (login_option == '3'):
+        break
+
+    #IH7: provide ways of different approaches
+    #IH5: make undo, backtracking available
+    #IH4: make familiar features available (keeping the menu easily accessible)
+    menu_choice = input("Enter 1: Search by Name\nEnter 2: Browse\nEnter 3: Add Entry\nEnter 4: Remove an Entry.\nEnter 5: Go back\n")
+    while (menu_choice != '5'):
+        #IH3: let users gather information
+        
+        #search by name
+        if (menu_choice == '1'):
+            print("\nSearch by name allows you to look up a monster by name. Ensure your entry is lowercase, singular, and typed exactly.")
+            name_search = input("Type in the monster name, or type 2 to go back: ")
+            if (name_search == '2'):
+                print("Going back to main menu...")
+            elif (monster_dictionary.get(name_search)):
+                print({monster_dictionary.get(name_search)})
+                if not (monster_dictionary.get(name_search)):
+                    print("No such monster exists!")
+
+        #IH 6
+        if (menu_choice == '2'):
+            browse_choice = input("\nThis option will print all info currently in this dictionary.\nEnter 1 to continue and enter 2 to go back:")
+            if (browse_choice == '2'):
+                print("Going back to main menu...")
+            elif(browse_choice == '1'):
+                for key, value in monster_dictionary.items():
+                    print(f"Name: {key},\n Entry: {value}\n")
+
+        #this has no error handling lol
+        if (menu_choice == '3'):
+            print("\nIf you add an entry, it will remain until it is deleted.")
+            add_choice = input("Enter the monster name for the entry, or enter 2 to go back: ")
+            if (add_choice == '2'):
+                print("Going back to main menu...")
+            else:
+                entry_value = input("Enter the description of the monster: ")
+                monster_dictionary.update({add_choice: entry_value})
+                print("Entry added successfully!")
+
+        if (menu_choice == '4'):
+            #IH2:Explain (to Users) the Costs of Using New and Existing Features
+            delete_choice = input("Enter the monster name to permanently delete its entry or enter 2 to go back: ")
+            if (delete_choice == '2'):
+                print("Going back to main menu...")
+            else:
+                #IH8: Encourage Tinkerers to Tinker Mindfully
+                confirmation = input("Are you sure you want to remove this entry? This cannot be undone.\n1: Yes\n2: No\n")
+                if (confirmation == '1'):
+                    if (monster_dictionary.get(delete_choice)):
+                        monster_dictionary.pop(delete_choice)
+                        print("Successfully deleted entry.")
+                    else:
+                        print("Invalid entry!")
+
+        menu_choice = input("Enter 1: Search by Name\nEnter 2: Browse\nEnter 3: Add Entry\nEnter 4: Remove an Entry.\nEnter 5: Go back\n")
+
+
+
