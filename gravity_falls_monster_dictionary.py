@@ -73,9 +73,12 @@ def request_archive_erase():
         f.write("erase")
 
 def retrieve_archive():
-    with open("uha-output.txt", "r+") as f:
-        for line in f:
-            print(line, end='')
+    with open("uha-output.txt", "r") as f:
+        content = f.read().strip()
+        if not content:
+            print("\nNo data to show.\n")
+            return
+        print(content)
 
 """main program related functions"""
 def menu_choice_1():
@@ -127,7 +130,7 @@ def menu_choice_5():
         retrieve_archive()
     elif (archive_choice == '2'):
         confirmation = input("Are you sure? This will permanently delete the logs. Yes/No: ")
-        if (confirmation.lower() == "Yes"):
+        if (confirmation.lower() == "yes"):
             request_archive_erase()
 
 while True:
@@ -194,9 +197,9 @@ while True:
             menu_choice_4()
 
         if (menu_choice == '5'):
-            
+            menu_choice_5()
 
-        menu_choice = input("Enter 1: Search by Name\nEnter 2: Browse\nEnter 3: Add Entry\nEnter 4: Remove an Entry.\nEnter 5: Logs\n")
+        menu_choice = input("Enter 1: Search by Name\nEnter 2: Browse\nEnter 3: Add Entry\nEnter 4: Remove an Entry.\nEnter 5: Logs\nEnter 6: Back\n")
 
 
 
