@@ -10,10 +10,10 @@ monster_dictionary = {
 }
 
 #User creds
-users = {
-    'DPines': 'journal3owner!',
-    'Ford': 'C1PH3R'
-}
+#users = {
+#    'DPines': 'journal3owner!',
+#    'Ford': 'C1PH3R'
+#}
 
 #Stores current session (rudimentary)
 current_user = ''
@@ -24,6 +24,53 @@ print("Welcome to the legendary and elusive Gravity Falls Monster Dictionary!")
 print("This is a compilation of the most common monsters and cryptids in our town.")
 print("You'll be able to browse different monster entries, as well as add/delete them.")
 
+"""Microservice-oriented function definitions"""
+def login_or_register_user(cmd_line):
+    with open("main-program.txt", "a", encoding="utf-8") as f:
+        f.write(cmd_line.strip() + "\n")
+
+def check_login_result(username):
+    """Check if login was successful for a given username"""
+    try:
+        with open("auth-responses.txt", "r") as f:
+            lines = f.readlines()
+            for line in lines:
+                line = line.strip()
+                if not line:
+                    continue
+                parts = line.split(",")
+                if len(parts) >= 3:
+                    status = parts[0] #"valid" or "invalid"
+                    action = parts[1] #"login"
+                    user = parts[2]   #username
+                    
+                    if action == "login" and user == username:
+                        return status == "valid"
+        return None  # Not found yet
+    except FileNotFoundError:
+        return None
+
+def check_register_result(username):
+    try:
+        with open("auth-responses.txt", "r") as f:
+            lines = f.readlines()
+            for line in lines:
+                line = line.strip()
+                if not line:
+                    continue
+                parts = line.split(",")
+                if len(parts) >= 3:
+                    status = parts[0]      # "valid" or "invalid"
+                    action = parts[1]      # "register"
+                    user = parts[2]        # username
+                    
+                    if action == "register" and user == username:
+                        return status == "valid"
+        return None  # Not found yet
+    except FileNotFoundError:
+        return None
+
+
 
 while True:
     #IH6: Provide an Explicit Path through the Task
@@ -33,20 +80,33 @@ while True:
         while True:
             username = input("Enter your username: ")
             password = input("Enter your password: ")
-            if username in users:
-                if users.get(username) == password:
-                    print("Logged in successfully.")
-                    current_user = username
-                    break
-                else:
-                    print("Wrong password!")
+
+            login_or_register_user("login,"+ username + "," + password)
+            print("Processing...")
+            time.sleep(4)
+            auth_response = check_login_result(username)
+
+            if auth_response == True:
+                print("Logged in successfully.")
+                current_user = username
+                break
+            elif auth_response == False:
+                print("Incorrect credentials.")
 
     if (login_option == '2'):
         username = input("Enter your account's username: ")
         password = input("Enter your account's password: ")
-        users.update({username: password})
-        print(f"You are now logged in as {username}.")
-        current_user = username
+        #users.update({username: password})
+        login_or_register_user("register," + username + "," + password)
+        print("Processing...")
+        time.sleep(4)
+        auth_response = check_register_result(username)
+
+        if auth_response == True:
+            print(f"You are now logged in as {username}.")
+            current_user = username
+        elif auth_response == False:
+            print("Registration failed.")
 
     if (login_option == '3'):
         break
