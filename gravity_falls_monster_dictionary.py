@@ -1,5 +1,6 @@
 import time
 
+"""
 #Monster dictionary
 monster_dictionary = {
     'flying skull': "Flying skulls are a type of creature within Gravity Falls, Oregon that resemble one-eyed skulls with bat wings.",
@@ -8,8 +9,9 @@ monster_dictionary = {
     'gnome': 'Gnomes are small men who live in the forest of Gravity Falls.\nThey seem to have an extreme level of coordination with each other, and are able to form one enormous gnome monster simply by latching onto each other.',
     'kill billy': 'The feral and fanged, glowing-eyed hill men are known as Kill Billies, \nand are known to suck blood and steal the overalls of any who may wander into their territory of the forest.'
 }
+"""
 
-#Stores current session (rudimentary)
+#Stores current session
 current_user = ''
 
 #main menu
@@ -80,6 +82,19 @@ def retrieve_archive():
             return
         print(content)
 
+def add_to_dictionary(entry):
+    with open("save-dict.txt", "a") as f:
+        f.write(entry + "\n")
+        print("Entry added successfully!")
+
+def retrieve_dictionary():
+    with open("dictionary-db.txt", "r") as f:
+        content = f.read().strip()
+        if not content:
+            print("\nDictionary is currently empty.\n")
+            return
+        print(content)
+
 """main program related functions"""
 def menu_choice_1():
     print("\nSearch by name allows you to look up a monster by name. Ensure your entry is lowercase, singular, and typed exactly.")
@@ -96,26 +111,26 @@ def menu_choice_2():
     if (browse_choice == '2'):
         print("Going back to main menu...")
     elif(browse_choice == '1'):
-        for key, value in monster_dictionary.items():
-            print(f"Name: {key},\n Entry: {value}\n")
+        retrieve_dictionary()
 
 def menu_choice_3():
-    print("\nIf you add an entry, it will remain until it is deleted.")
+    #IH2:Explain (to Users) the Costs of Using New and Existing Features
+    print("\nIf you add an entry, it will permanently remain for archival purposes.")
     add_choice = input("Enter the monster name for the entry, or enter 2 to go back: ")
     if (add_choice == '2'):
         print("Going back to main menu...")
     else:
-        entry_value = input("Enter the description of the monster: ")
-        monster_dictionary.update({add_choice: entry_value})
-        print("Entry added successfully!")
+        entry_value = input("Enter the name & description of the monster: ")
+        add_to_dictionary(entry_value)
+        
 
+"""
 def menu_choice_4():
-    #IH2:Explain (to Users) the Costs of Using New and Existing Features
     delete_choice = input("Enter the monster name to permanently delete its entry or enter 2 to go back: ")
     if (delete_choice == '2'):
         print("Going back to main menu...")
     else:
-        #IH8: Encourage Tinkerers to Tinker Mindfully
+        
         confirmation = input("Are you sure you want to remove this entry? This cannot be undone.\n1: Yes\n2: No\n")
         if (confirmation == '1'):
             if (monster_dictionary.get(delete_choice)):
@@ -123,12 +138,14 @@ def menu_choice_4():
                 print("Successfully deleted entry.")
             else:
                 print("Invalid entry!")
+"""
 
-def menu_choice_5():
+def menu_choice_4():
     archive_choice = input("Press 1 to view all logs, press 2 to delete all logs: ")
     if (archive_choice == '1'):
         retrieve_archive()
     elif (archive_choice == '2'):
+        #IH8: Encourage Tinkerers to Tinker Mindfully
         confirmation = input("Are you sure? This will permanently delete the logs. Yes/No: ")
         if (confirmation.lower() == "yes"):
             request_archive_erase()
@@ -177,8 +194,8 @@ while True:
     #IH7: provide ways of different approaches
     #IH5: make undo, backtracking available
     #IH4: make familiar features available (keeping the menu easily accessible)
-    menu_choice = input("Enter 1: Search by Name\nEnter 2: Browse\nEnter 3: Add Entry\nEnter 4: Remove an Entry.\nEnter 5: Logs\nEnter 6: Back\n")
-    while (menu_choice != '6'):
+    menu_choice = input("Enter 1: Search by Name\nEnter 2: Browse\nEnter 3: Add Entry\nEnter 4: Access/Remove Logs\nEnter 5: Back\n")
+    while (menu_choice != '5'):
         #IH3: let users gather information
         
         #search by name
@@ -189,17 +206,13 @@ while True:
         if (menu_choice == '2'):
             menu_choice_2()
             
-        #this has no error handling lol
         if (menu_choice == '3'):
             menu_choice_3()
 
         if (menu_choice == '4'):
             menu_choice_4()
 
-        if (menu_choice == '5'):
-            menu_choice_5()
-
-        menu_choice = input("Enter 1: Search by Name\nEnter 2: Browse\nEnter 3: Add Entry\nEnter 4: Remove an Entry.\nEnter 5: Logs\nEnter 6: Back\n")
+        menu_choice = input("Enter 1: Search by Name\nEnter 2: Browse\nEnter 3: Add Entry\nEnter 4: Access/Remove Logs\nEnter 5: Back\n")
 
 
 
