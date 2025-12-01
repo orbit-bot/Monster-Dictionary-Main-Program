@@ -1,15 +1,5 @@
 import time
-
-"""
-#Monster dictionary
-monster_dictionary = {
-    'flying skull': "Flying skulls are a type of creature within Gravity Falls, Oregon that resemble one-eyed skulls with bat wings.",
-    'cowl': "Cowls are an interbred species of cows and owls that lays milk-filled eggs. Calls MHOO.",
-    'geodite': 'They resemble living geodes that glow and can create sparks when that are banged together.\nThey communicate with each other by high-pitched chirps and humming noises.',
-    'gnome': 'Gnomes are small men who live in the forest of Gravity Falls.\nThey seem to have an extreme level of coordination with each other, and are able to form one enormous gnome monster simply by latching onto each other.',
-    'kill billy': 'The feral and fanged, glowing-eyed hill men are known as Kill Billies, \nand are known to suck blood and steal the overalls of any who may wander into their territory of the forest.'
-}
-"""
+from datetime import datetime, timezone
 
 #Stores current session
 current_user = ''
@@ -95,16 +85,36 @@ def retrieve_dictionary():
             return
         print(content)
 
+def get_time():
+    local_timezone = datetime.now(timezone.utc).astimezone()
+    current_datetime = datetime.now()
+    with open("time-converter-requests.txt", "a") as in_file:
+        in_file.write(current_datetime + "," + local_timezone + "," + "America/Los_Angeles")
+    sleep(4)
+    with open("time-converter-response.txt", "r") as out_file:
+        content = out_file.read().strip()
+        print("Local device time: " + current_datetime + "\n")
+        print("Oregon time: " + content + "\n")
+
 """main program related functions"""
 def menu_choice_1():
     print("\nSearch by name allows you to look up a monster by name. Ensure your entry is lowercase, singular, and typed exactly.")
     name_search = input("Type in the monster name, or type 2 to go back: ")
     if (name_search == '2'):
         print("Going back to main menu...")
-    elif (monster_dictionary.get(name_search)):
-        print({monster_dictionary.get(name_search)})
-        if not (monster_dictionary.get(name_search)):
-            print("No such monster exists!")
+    else:
+        try:
+            with open("dictionary-db.txt", "r") as f:
+                dict_line = []
+                for line_number, line in enumerate(f, 1):
+                    if name_search in line:
+                        dict_line.append(line_number)
+                        print(line.strip() + "\n")  #prints matching line
+            
+            if not dict_line:
+                print("No such monster exists.")
+        except FileNotFoundError:
+            print("Dictionary file not found.")
 
 def menu_choice_2():
     browse_choice = input("\nThis option will print all info currently in this dictionary.\nEnter 1 to continue and enter 2 to go back:")
@@ -150,6 +160,11 @@ def menu_choice_4():
         if (confirmation.lower() == "yes"):
             request_archive_erase()
 
+def menu_choice_5():
+    print("Fetching time...\n")
+    get_time()
+    
+
 while True:
     #IH6: Provide an Explicit Path through the Task
     login_option = input("\nEnter 1 to Log in, Enter 2 to Create an Account. Enter 3 to exit.\n")
@@ -194,8 +209,8 @@ while True:
     #IH7: provide ways of different approaches
     #IH5: make undo, backtracking available
     #IH4: make familiar features available (keeping the menu easily accessible)
-    menu_choice = input("Enter 1: Search by Name\nEnter 2: Browse\nEnter 3: Add Entry\nEnter 4: Access/Remove Logs\nEnter 5: Back\n")
-    while (menu_choice != '5'):
+    menu_choice = input("Enter 1: Search by Name\nEnter 2: Browse\nEnter 3: Add Entry\nEnter 4: Access/Remove Logs\nEnter 5: Get Oregon Time\nEnter 6: Back\n")
+    while (menu_choice != '6'):
         #IH3: let users gather information
         
         #search by name
@@ -211,8 +226,11 @@ while True:
 
         if (menu_choice == '4'):
             menu_choice_4()
+        
+        if (menu_choice == '5'):
+            menu_choice_5()
 
-        menu_choice = input("Enter 1: Search by Name\nEnter 2: Browse\nEnter 3: Add Entry\nEnter 4: Access/Remove Logs\nEnter 5: Back\n")
+        menu_choice = input("Enter 1: Search by Name\nEnter 2: Browse\nEnter 3: Add Entry\nEnter 4: Access/Remove Logs\nEnter 5: Get Oregon Time\nEnter 6: Back\n")
 
 
 

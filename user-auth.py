@@ -254,6 +254,6 @@ _ensure_files()
 print(f"Main program watching {MAIN_IN}")
 while True:
     result = read_request()
-    if result == "no-commands":
-        _say("no commands, sleeping...")
+    #if result == "no-commands":
+        #_say("no commands, sleeping...")
     time.sleep(2)
