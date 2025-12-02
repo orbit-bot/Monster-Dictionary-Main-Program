@@ -10,13 +10,16 @@ print("Welcome to the legendary and elusive Gravity Falls Monster Dictionary!")
 print("This is a compilation of the most common monsters and cryptids in our town.")
 print("You'll be able to browse different monster entries, as well as add/delete them.")
 
+#Microservice 1:action,username,password
 """Microservice-oriented function definitions"""
 def login_or_register_user(cmd_line):
+    #action,username,password
     with open("main-program.txt", "a", encoding="utf-8") as f:
         f.write(cmd_line.strip() + "\n")
 
 def check_login_result(username):
     """Check if login was successful for a given username"""
+    print("[[Checking for successful login...]]\n")
     try:
         with open("auth-responses.txt", "r") as f:
             lines = f.readlines()
@@ -56,15 +59,19 @@ def check_register_result(username):
     except FileNotFoundError:
         return None
 
+#Microservice 3: user,action format
 def action_log(username, action):
+    print("[[Requesting action log]]\n")
     with open("uha-input.txt", "a") as f:
         f.write(username + "," + action)
 
 def request_archive_erase():
+    print("Requesting archive erase.\n")
     with open("uha-input.txt", "a") as f:
         f.write("erase")
 
 def retrieve_archive():
+    print("Retrieving actions...")
     with open("uha-output.txt", "r") as f:
         content = f.read().strip()
         if not content:
@@ -72,7 +79,9 @@ def retrieve_archive():
             return
         print(content)
 
+#Microservice 2: dictionary entry, newline format
 def add_to_dictionary(entry):
+    print("[[Requesting adding to dictionary]]\n")
     with open("save-dict.txt", "a") as f:
         f.write(entry + "\n")
         print("Entry added successfully!")
@@ -85,16 +94,24 @@ def retrieve_dictionary():
             return
         print(content)
 
+#Microservice 4: current datetime, current timezone, and desired timezone
 def get_time():
-    local_timezone = datetime.now(timezone.utc).astimezone()
+    print("[[Requesting time...]]\n")
     current_datetime = datetime.now()
-    with open("time-converter-requests.txt", "a") as in_file:
-        in_file.write(current_datetime + "," + local_timezone + "," + "America/Los_Angeles")
-    sleep(4)
+    with open("time-converter-requests.txt", "w") as in_file:
+        in_file.write(f"{current_datetime.isoformat()},America/Los_Angeles,America/New_York\n")
+    time.sleep(3)
     with open("time-converter-response.txt", "r") as out_file:
         content = out_file.read().strip()
-        print("Local device time: " + current_datetime + "\n")
-        print("Oregon time: " + content + "\n")
+    if not content:
+        print("Error: Response file is empty.")
+        return
+    try:
+        converted_time = datetime.fromisoformat(content)
+        print(f"Oregon time (local): {current_datetime}")
+        print(f"Washington D.C time: {converted_time}\n")
+    except ValueError as e:
+        print(f"Error: {e}")
 
 """main program related functions"""
 def menu_choice_1():
@@ -209,7 +226,7 @@ while True:
     #IH7: provide ways of different approaches
     #IH5: make undo, backtracking available
     #IH4: make familiar features available (keeping the menu easily accessible)
-    menu_choice = input("Enter 1: Search by Name\nEnter 2: Browse\nEnter 3: Add Entry\nEnter 4: Access/Remove Logs\nEnter 5: Get Oregon Time\nEnter 6: Back\n")
+    menu_choice = input("Enter 1: Search by Name\nEnter 2: Browse\nEnter 3: Add Entry\nEnter 4: Access/Remove Logs\nEnter 5: Get DC Time\nEnter 6: Back\n")
     while (menu_choice != '6'):
         #IH3: let users gather information
         
@@ -230,7 +247,7 @@ while True:
         if (menu_choice == '5'):
             menu_choice_5()
 
-        menu_choice = input("Enter 1: Search by Name\nEnter 2: Browse\nEnter 3: Add Entry\nEnter 4: Access/Remove Logs\nEnter 5: Get Oregon Time\nEnter 6: Back\n")
+        menu_choice = input("Enter 1: Search by Name\nEnter 2: Browse\nEnter 3: Add Entry\nEnter 4: Access/Remove Logs\nEnter 5: Get DC Time\nEnter 6: Back\n")
 
 
 

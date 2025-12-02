@@ -17,6 +17,7 @@ def store_archive_entry(entry):
         formatted_entry = f"{timestamp} | {user} | {action}\n"
         
         with open(OUTPUT_DATA_FILE, "a") as f:
+            print("Action stored: " + formatted_entry)
             f.write(formatted_entry)
         
     else:

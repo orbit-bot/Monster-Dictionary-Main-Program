@@ -63,6 +63,7 @@ def time_output(output_time):
     # Function to write to the output file based on the time conversion.
     with open("time-converter-response.txt", "w+") as f:
         #Leaves in iso format for easy retrieval from main program
+        print("Time outputted: " + str(output_time.isoformat()))
         f.write(output_time.isoformat())
 
 
@@ -76,5 +77,5 @@ while True:
         desired_zone = validity[2]
         time_conversion(time_date, current_zone, desired_zone)
         clear_command(current_line)
-    print("Listening for command...")
-    time.sleep(2)
+    #print("Listening for command...")
+    time.sleep(1)
